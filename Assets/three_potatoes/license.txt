@@ -1,0 +1,11 @@
+Model Information:
+* title:	Three Potatoes
+* source:	https://sketchfab.com/3d-models/three-potatoes-c5604d5c4f864330b6d171866ea931e2
+* author:	DigitalSouls (https://sketchfab.com/DigitalSouls)
+
+Model License:
+* license type:	CC-BY-NC-4.0 (http://creativecommons.org/licenses/by-nc/4.0/)
+* requirements:	Author must be credited. No commercial use.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Three Potatoes" (https://sketchfab.com/3d-models/three-potatoes-c5604d5c4f864330b6d171866ea931e2) by DigitalSouls (https://sketchfab.com/DigitalSouls) licensed under CC-BY-NC-4.0 (http://creativecommons.org/licenses/by-nc/4.0/)

@@ -1,0 +1,11 @@
+Model Information:
+* title:	Flour ARIDLL
+* source:	https://sketchfab.com/3d-models/flour-aridll-d40db94d92ab4e7a82a1c199312f3985
+* author:	fwild (https://sketchfab.com/fwild)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Flour ARIDLL" (https://sketchfab.com/3d-models/flour-aridll-d40db94d92ab4e7a82a1c199312f3985) by fwild (https://sketchfab.com/fwild) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

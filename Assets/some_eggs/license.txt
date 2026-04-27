@@ -1,0 +1,8 @@
+Model Information:
+* title:	Some Eggs
+* source:	https://sketchfab.com/3d-models/some-eggs-f1d63c4e46c743978041cf4cb34b8573
+* author:	stylo0 (https://sketchfab.com/stylo0)
+
+Model License:
+* license type:	SKETCHFAB Standard (https://sketchfab.com/licenses)
+* requirements:	Under basic restrictions, use worldwide, on all types of media, commercially or not, and in all types of derivative works

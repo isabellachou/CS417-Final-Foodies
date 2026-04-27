@@ -1,0 +1,11 @@
+Model Information:
+* title:	Leek
+* source:	https://sketchfab.com/3d-models/leek-f04ab1e3e07f42c799c9415a4767fec9
+* author:	sharkbitestudios (https://sketchfab.com/sharkbitestudios)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Leek" (https://sketchfab.com/3d-models/leek-f04ab1e3e07f42c799c9415a4767fec9) by sharkbitestudios (https://sketchfab.com/sharkbitestudios) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

@@ -1,0 +1,11 @@
+Model Information:
+* title:	Dandys World Eggs
+* source:	https://sketchfab.com/3d-models/dandys-world-eggs-306d0b1a7e7645a588dcbf8c82eca724
+* author:	NotThatGuy™ (https://sketchfab.com/Ngboy111111111)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Dandys World Eggs" (https://sketchfab.com/3d-models/dandys-world-eggs-306d0b1a7e7645a588dcbf8c82eca724) by NotThatGuy™ (https://sketchfab.com/Ngboy111111111) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

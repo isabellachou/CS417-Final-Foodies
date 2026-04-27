@@ -1,0 +1,11 @@
+Model Information:
+* title:	Vegetables HiGen3D by Wornox
+* source:	https://sketchfab.com/3d-models/vegetables-higen3d-by-wornox-ddf63ced0dd54598a4d7514fec92b294
+* author:	WornoxGames (https://sketchfab.com/WornoxGames)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Vegetables HiGen3D by Wornox" (https://sketchfab.com/3d-models/vegetables-higen3d-by-wornox-ddf63ced0dd54598a4d7514fec92b294) by WornoxGames (https://sketchfab.com/WornoxGames) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

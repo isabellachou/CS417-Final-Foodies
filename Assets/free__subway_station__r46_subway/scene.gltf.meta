@@ -1,0 +1,570 @@
+fileFormatVersion: 2
+guid: df66b51b645f2f443b8e843e16c59b15
+ScriptedImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 2
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+  script: {fileID: 11500000, guid: 715df9372183c47e389bb6e19fbc3b52, type: 3}
+  editorImportSettings:
+    generateSecondaryUVSet: 0
+  importSettings:
+    nodeNameMethod: 1
+    animationMethod: 2
+    generateMipMaps: 1
+    texturesReadable: 0
+    defaultMinFilterMode: 9729
+    defaultMagFilterMode: 9729
+    anisotropicFilterLevel: 1
+  instantiationSettings:
+    mask: -1
+    layer: 0
+    skinUpdateWhenOffscreen: 1
+    lightIntensityFactor: 1
+    sceneObjectCreation: 2
+  assetDependencies:
+  - type: 0
+    originalUri: Assets\free__subway_station__r46_subway\scene.bin
+    assetPath: Assets\free__subway_station__r46_subway\scene.bin
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\FluorescenteLuz_baseColor.jpeg
+    assetPath: Assets\free__subway_station__r46_subway\textures\FluorescenteLuz_baseColor.jpeg
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\FluorescenteLuz_metallicRoughness.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\FluorescenteLuz_metallicRoughness.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\FluorescenteLuz_emissive.jpeg
+    assetPath: Assets\free__subway_station__r46_subway\textures\FluorescenteLuz_emissive.jpeg
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\FluorescenteLuz_normal.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\FluorescenteLuz_normal.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\Fluorescente_baseColor.jpeg
+    assetPath: Assets\free__subway_station__r46_subway\textures\Fluorescente_baseColor.jpeg
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\Fluorescente_metallicRoughness.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\Fluorescente_metallicRoughness.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\Fluorescente_normal.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\Fluorescente_normal.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\CableTexturePack_baseColor.jpeg
+    assetPath: Assets\free__subway_station__r46_subway\textures\CableTexturePack_baseColor.jpeg
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\CableTexturePack_metallicRoughness.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\CableTexturePack_metallicRoughness.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\LuzTunelLarga_baseColor.jpeg
+    assetPath: Assets\free__subway_station__r46_subway\textures\LuzTunelLarga_baseColor.jpeg
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\LuzTunelLarga_metallicRoughness.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\LuzTunelLarga_metallicRoughness.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\LuzTunelLarga_emissive.jpeg
+    assetPath: Assets\free__subway_station__r46_subway\textures\LuzTunelLarga_emissive.jpeg
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\LuzTunelLarga_normal.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\LuzTunelLarga_normal.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\LuzTunelCorta_baseColor.jpeg
+    assetPath: Assets\free__subway_station__r46_subway\textures\LuzTunelCorta_baseColor.jpeg
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\LuzTunelCorta_metallicRoughness.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\LuzTunelCorta_metallicRoughness.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\LuzTunelCorta_emissive.jpeg
+    assetPath: Assets\free__subway_station__r46_subway\textures\LuzTunelCorta_emissive.jpeg
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\LuzTunelCorta_normal.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\LuzTunelCorta_normal.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\CartelPilar_baseColor.jpeg
+    assetPath: Assets\free__subway_station__r46_subway\textures\CartelPilar_baseColor.jpeg
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\CartelPilar_metallicRoughness.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\CartelPilar_metallicRoughness.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\CartelPilar_normal.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\CartelPilar_normal.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\JoinedDecals_baseColor.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\JoinedDecals_baseColor.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\Pilar_baseColor.jpeg
+    assetPath: Assets\free__subway_station__r46_subway\textures\Pilar_baseColor.jpeg
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\Pilar_metallicRoughness.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\Pilar_metallicRoughness.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\Pilar_normal.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\Pilar_normal.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\CamaraSeguridad_baseColor.jpeg
+    assetPath: Assets\free__subway_station__r46_subway\textures\CamaraSeguridad_baseColor.jpeg
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\CamaraSeguridad_metallicRoughness.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\CamaraSeguridad_metallicRoughness.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\CamaraSeguridad_normal.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\CamaraSeguridad_normal.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\WetFloorCartel_baseColor.jpeg
+    assetPath: Assets\free__subway_station__r46_subway\textures\WetFloorCartel_baseColor.jpeg
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\WetFloorCartel_metallicRoughness.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\WetFloorCartel_metallicRoughness.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\WetFloorCartel_normal.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\WetFloorCartel_normal.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\Papelera_baseColor.jpeg
+    assetPath: Assets\free__subway_station__r46_subway\textures\Papelera_baseColor.jpeg
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\Papelera_metallicRoughness.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\Papelera_metallicRoughness.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\Papelera_normal.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\Papelera_normal.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\Semaforo_baseColor.jpeg
+    assetPath: Assets\free__subway_station__r46_subway\textures\Semaforo_baseColor.jpeg
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\Semaforo_metallicRoughness.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\Semaforo_metallicRoughness.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\Semaforo_emissive.jpeg
+    assetPath: Assets\free__subway_station__r46_subway\textures\Semaforo_emissive.jpeg
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\Semaforo_normal.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\Semaforo_normal.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\Banco_baseColor.jpeg
+    assetPath: Assets\free__subway_station__r46_subway\textures\Banco_baseColor.jpeg
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\Banco_metallicRoughness.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\Banco_metallicRoughness.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\Banco_normal.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\Banco_normal.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\CamaraColgante_baseColor.jpeg
+    assetPath: Assets\free__subway_station__r46_subway\textures\CamaraColgante_baseColor.jpeg
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\CamaraColgante_metallicRoughness.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\CamaraColgante_metallicRoughness.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\CamaraColgante_normal.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\CamaraColgante_normal.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\CajaMetalica_baseColor.jpeg
+    assetPath: Assets\free__subway_station__r46_subway\textures\CajaMetalica_baseColor.jpeg
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\CajaMetalica_metallicRoughness.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\CajaMetalica_metallicRoughness.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\CajaMetalica_normal.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\CajaMetalica_normal.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\CajaVias_baseColor.jpeg
+    assetPath: Assets\free__subway_station__r46_subway\textures\CajaVias_baseColor.jpeg
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\CajaVias_metallicRoughness.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\CajaVias_metallicRoughness.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\CajaVias_normal.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\CajaVias_normal.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\SujeccionesCables_baseColor.jpeg
+    assetPath: Assets\free__subway_station__r46_subway\textures\SujeccionesCables_baseColor.jpeg
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\SujeccionesCables_metallicRoughness.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\SujeccionesCables_metallicRoughness.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\SujeccionesCables_normal.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\SujeccionesCables_normal.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\CartelSalida_Izquierda_baseColor.jpeg
+    assetPath: Assets\free__subway_station__r46_subway\textures\CartelSalida_Izquierda_baseColor.jpeg
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\CartelSalida_Izquierda_metallicRoughness.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\CartelSalida_Izquierda_metallicRoughness.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\CartelSalida_Izquierda_emissive.jpeg
+    assetPath: Assets\free__subway_station__r46_subway\textures\CartelSalida_Izquierda_emissive.jpeg
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\CartelSalida_Izquierda_normal.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\CartelSalida_Izquierda_normal.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\Vias_baseColor.jpeg
+    assetPath: Assets\free__subway_station__r46_subway\textures\Vias_baseColor.jpeg
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\Vias_metallicRoughness.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\Vias_metallicRoughness.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\Vias_normal.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\Vias_normal.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\NumeroVias_baseColor.jpeg
+    assetPath: Assets\free__subway_station__r46_subway\textures\NumeroVias_baseColor.jpeg
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\NumeroVias_metallicRoughness.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\NumeroVias_metallicRoughness.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\NumeroVias_normal.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\NumeroVias_normal.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\Poste_baseColor.jpeg
+    assetPath: Assets\free__subway_station__r46_subway\textures\Poste_baseColor.jpeg
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\Poste_metallicRoughness.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\Poste_metallicRoughness.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\Poste_normal.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\Poste_normal.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\Megafono_baseColor.jpeg
+    assetPath: Assets\free__subway_station__r46_subway\textures\Megafono_baseColor.jpeg
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\Megafono_metallicRoughness.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\Megafono_metallicRoughness.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\Megafono_normal.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\Megafono_normal.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\PiezaViasCables_baseColor.jpeg
+    assetPath: Assets\free__subway_station__r46_subway\textures\PiezaViasCables_baseColor.jpeg
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\PiezaViasCables_metallicRoughness.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\PiezaViasCables_metallicRoughness.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\PiezaViasCables_normal.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\PiezaViasCables_normal.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\EscaleraV1_baseColor.jpeg
+    assetPath: Assets\free__subway_station__r46_subway\textures\EscaleraV1_baseColor.jpeg
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\EscaleraV1_metallicRoughness.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\EscaleraV1_metallicRoughness.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\EscaleraV1_normal.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\EscaleraV1_normal.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\SeparadorEscalera_baseColor.jpeg
+    assetPath: Assets\free__subway_station__r46_subway\textures\SeparadorEscalera_baseColor.jpeg
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\SeparadorEscalera_metallicRoughness.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\SeparadorEscalera_metallicRoughness.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\SeparadorEscalera_normal.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\SeparadorEscalera_normal.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\Barandilla_baseColor.jpeg
+    assetPath: Assets\free__subway_station__r46_subway\textures\Barandilla_baseColor.jpeg
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\Barandilla_metallicRoughness.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\Barandilla_metallicRoughness.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\Barandilla_normal.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\Barandilla_normal.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\EscaleraV2_baseColor.jpeg
+    assetPath: Assets\free__subway_station__r46_subway\textures\EscaleraV2_baseColor.jpeg
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\EscaleraV2_metallicRoughness.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\EscaleraV2_metallicRoughness.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\EscaleraV2_normal.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\EscaleraV2_normal.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\EscaleraV3_baseColor.jpeg
+    assetPath: Assets\free__subway_station__r46_subway\textures\EscaleraV3_baseColor.jpeg
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\EscaleraV3_metallicRoughness.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\EscaleraV3_metallicRoughness.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\EscaleraV3_normal.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\EscaleraV3_normal.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\CartelInformativoV1_baseColor.jpeg
+    assetPath: Assets\free__subway_station__r46_subway\textures\CartelInformativoV1_baseColor.jpeg
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\CartelInformativoV1_metallicRoughness.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\CartelInformativoV1_metallicRoughness.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\CartelInformativoV1_normal.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\CartelInformativoV1_normal.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\CartelInformativoV2_baseColor.jpeg
+    assetPath: Assets\free__subway_station__r46_subway\textures\CartelInformativoV2_baseColor.jpeg
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\CartelInformativoV3_baseColor.jpeg
+    assetPath: Assets\free__subway_station__r46_subway\textures\CartelInformativoV3_baseColor.jpeg
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\TuberiaViaDetallada_baseColor.jpeg
+    assetPath: Assets\free__subway_station__r46_subway\textures\TuberiaViaDetallada_baseColor.jpeg
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\TuberiaViaDetallada_metallicRoughness.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\TuberiaViaDetallada_metallicRoughness.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\TuberiaViaDetallada_normal.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\TuberiaViaDetallada_normal.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\CajaT_baseColor.jpeg
+    assetPath: Assets\free__subway_station__r46_subway\textures\CajaT_baseColor.jpeg
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\CajaT_metallicRoughness.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\CajaT_metallicRoughness.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\CajaT_normal.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\CajaT_normal.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\PackCajas_baseColor.jpeg
+    assetPath: Assets\free__subway_station__r46_subway\textures\PackCajas_baseColor.jpeg
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\PackCajas_metallicRoughness.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\PackCajas_metallicRoughness.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\PackCajas_normal.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\PackCajas_normal.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\TubosTecho_baseColor.jpeg
+    assetPath: Assets\free__subway_station__r46_subway\textures\TubosTecho_baseColor.jpeg
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\TubosTecho_metallicRoughness.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\TubosTecho_metallicRoughness.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\TubosTecho_normal.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\TubosTecho_normal.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\SeparadorAndanas_baseColor.jpeg
+    assetPath: Assets\free__subway_station__r46_subway\textures\SeparadorAndanas_baseColor.jpeg
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\SeparadorAndanas_metallicRoughness.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\SeparadorAndanas_metallicRoughness.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\SeparadorAndanas_normal.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\SeparadorAndanas_normal.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\CajaExtintor_baseColor.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\CajaExtintor_baseColor.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\CajaExtintor_metallicRoughness.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\CajaExtintor_metallicRoughness.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\CajaExtintor_normal.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\CajaExtintor_normal.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\Extintor_baseColor.jpeg
+    assetPath: Assets\free__subway_station__r46_subway\textures\Extintor_baseColor.jpeg
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\Extintor_metallicRoughness.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\Extintor_metallicRoughness.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\Extintor_normal.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\Extintor_normal.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\SueloModular_baseColor.jpeg
+    assetPath: Assets\free__subway_station__r46_subway\textures\SueloModular_baseColor.jpeg
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\SueloModular_metallicRoughness.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\SueloModular_metallicRoughness.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\SueloModular_normal.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\SueloModular_normal.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\SueloVias_baseColor.jpeg
+    assetPath: Assets\free__subway_station__r46_subway\textures\SueloVias_baseColor.jpeg
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\SueloVias_metallicRoughness.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\SueloVias_metallicRoughness.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\SueloVias_normal.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\SueloVias_normal.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\ParedesModulares_baseColor.jpeg
+    assetPath: Assets\free__subway_station__r46_subway\textures\ParedesModulares_baseColor.jpeg
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\ParedesModulares_metallicRoughness.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\ParedesModulares_metallicRoughness.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\ParedesModulares_normal.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\ParedesModulares_normal.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\Techos_Modulares_baseColor.jpeg
+    assetPath: Assets\free__subway_station__r46_subway\textures\Techos_Modulares_baseColor.jpeg
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\Techos_Modulares_metallicRoughness.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\Techos_Modulares_metallicRoughness.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\Techos_Modulares_normal.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\Techos_Modulares_normal.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\ParedTunel_baseColor.jpeg
+    assetPath: Assets\free__subway_station__r46_subway\textures\ParedTunel_baseColor.jpeg
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\ParedTunel_metallicRoughness.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\ParedTunel_metallicRoughness.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\ParedTunel_normal.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\ParedTunel_normal.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\TechoEscalera_baseColor.jpeg
+    assetPath: Assets\free__subway_station__r46_subway\textures\TechoEscalera_baseColor.jpeg
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\TechoEscalera_metallicRoughness.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\TechoEscalera_metallicRoughness.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\TechoEscalera_normal.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\TechoEscalera_normal.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\Maleta_baseColor.jpeg
+    assetPath: Assets\free__subway_station__r46_subway\textures\Maleta_baseColor.jpeg
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\Maleta_metallicRoughness.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\Maleta_metallicRoughness.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\Maleta_normal.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\Maleta_normal.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\CanTrash_baseColor.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\CanTrash_baseColor.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\CanTrash_metallicRoughness.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\CanTrash_metallicRoughness.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\CanTrash_normal.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\CanTrash_normal.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\CanTrash_transmission.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\CanTrash_transmission.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\DriverCabin_baseColor.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\DriverCabin_baseColor.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\DriverCabin_metallicRoughness.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\DriverCabin_metallicRoughness.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\DriverCabin_emissive.jpeg
+    assetPath: Assets\free__subway_station__r46_subway\textures\DriverCabin_emissive.jpeg
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\DriverCabin_normal.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\DriverCabin_normal.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\CabezaTren_baseColor.jpeg
+    assetPath: Assets\free__subway_station__r46_subway\textures\CabezaTren_baseColor.jpeg
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\CabezaTren_metallicRoughness.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\CabezaTren_metallicRoughness.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\CabezaTren_emissive.jpeg
+    assetPath: Assets\free__subway_station__r46_subway\textures\CabezaTren_emissive.jpeg
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\CabezaTren_normal.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\CabezaTren_normal.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\LateralTren_baseColor.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\LateralTren_baseColor.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\LateralTren_metallicRoughness.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\LateralTren_metallicRoughness.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\LateralTren_emissive.jpeg
+    assetPath: Assets\free__subway_station__r46_subway\textures\LateralTren_emissive.jpeg
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\LateralTren_normal.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\LateralTren_normal.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\TechoTren_baseColor.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\TechoTren_baseColor.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\TechoTren_metallicRoughness.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\TechoTren_metallicRoughness.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\TechoTren_normal.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\TechoTren_normal.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\PuertasLaterales_baseColor.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\PuertasLaterales_baseColor.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\PuertasLaterales_metallicRoughness.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\PuertasLaterales_metallicRoughness.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\PuertasLaterales_normal.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\PuertasLaterales_normal.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\BajosExterioresTren_baseColor.jpeg
+    assetPath: Assets\free__subway_station__r46_subway\textures\BajosExterioresTren_baseColor.jpeg
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\BajosExterioresTren_metallicRoughness.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\BajosExterioresTren_metallicRoughness.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\BajosExterioresTren_normal.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\BajosExterioresTren_normal.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\AsientosInteriores_baseColor.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\AsientosInteriores_baseColor.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\AsientosInteriores_metallicRoughness.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\AsientosInteriores_metallicRoughness.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\AsientosInteriores_normal.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\AsientosInteriores_normal.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\TechoInterior_baseColor.jpeg
+    assetPath: Assets\free__subway_station__r46_subway\textures\TechoInterior_baseColor.jpeg
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\TechoInterior_metallicRoughness.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\TechoInterior_metallicRoughness.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\TechoInterior_emissive.jpeg
+    assetPath: Assets\free__subway_station__r46_subway\textures\TechoInterior_emissive.jpeg
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\TechoInterior_normal.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\TechoInterior_normal.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\SueloInterior_baseColor.jpeg
+    assetPath: Assets\free__subway_station__r46_subway\textures\SueloInterior_baseColor.jpeg
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\SueloInterior_metallicRoughness.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\SueloInterior_metallicRoughness.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\SueloInterior_normal.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\SueloInterior_normal.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\LateralesInteriores_baseColor.jpeg
+    assetPath: Assets\free__subway_station__r46_subway\textures\LateralesInteriores_baseColor.jpeg
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\LateralesInteriores_metallicRoughness.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\LateralesInteriores_metallicRoughness.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\LateralesInteriores_normal.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\LateralesInteriores_normal.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\PuertaDelantera_baseColor.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\PuertaDelantera_baseColor.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\PuertaDelantera_metallicRoughness.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\PuertaDelantera_metallicRoughness.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\PuertaDelantera_normal.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\PuertaDelantera_normal.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\material_baseColor.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\material_baseColor.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\material_metallicRoughness.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\material_metallicRoughness.png
+  - type: 1
+    originalUri: Assets\free__subway_station__r46_subway\textures\material_normal.png
+    assetPath: Assets\free__subway_station__r46_subway\textures\material_normal.png
+  reportItems:
+  - type: 2
+    code: 20
+    messages:
+    - KHR_materials_emissive_strength
+  - type: 2
+    code: 20
+    messages:
+    - KHR_materials_specular
