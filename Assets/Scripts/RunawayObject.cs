@@ -29,7 +29,16 @@ public class RunawayObject : MonoBehaviour
     private bool preferPlayerCameraForDistance = true;
 
     [SerializeField]
-    private List<Transform> escapePoints = new();
+    private AudioSource audioSource;
+
+    [SerializeField]
+    private ParticleSystem runStartParticles;
+
+    [SerializeField]
+    private AudioClip runStartSound;
+
+    [SerializeField]
+    private AudioClip tauntStartSound;
 
     [Header("Movement")]
     [SerializeField]
@@ -140,6 +149,8 @@ public class RunawayObject : MonoBehaviour
         grabInteractable = GetComponent<XRGrabInteractable>();
         rb = GetComponent<Rigidbody>();
         agent = GetComponent<NavMeshAgent>();
+        if (audioSource == null)
+            audioSource = GetComponent<AudioSource>();
         if (agent == null)
             agent = gameObject.AddComponent<NavMeshAgent>();
 
@@ -315,6 +326,7 @@ public class RunawayObject : MonoBehaviour
             yield break;
         }
 
+        PlayRunStartEffects();
         State = RunawayState.Fleeing;
         LogDebug("Entered Fleeing state.");
     }
@@ -532,36 +544,6 @@ public class RunawayObject : MonoBehaviour
 
         float bestScore = float.NegativeInfinity;
         NavMeshPath path = new NavMeshPath();
-
-        if (escapePoints != null)
-        {
-            foreach (Transform point in escapePoints)
-            {
-                if (point == null || point == currentTarget)
-                    continue;
-
-                if (
-                    TryScoreDestination(
-                        origin,
-                        playerPosition,
-                        awayDirection,
-                        point.position,
-                        path,
-                        out float score,
-                        out Vector3 sampledPosition
-                    )
-                    && score > bestScore
-                )
-                {
-                    bestScore = score;
-                    destination = sampledPosition;
-                    target = point;
-                    LogDebug(
-                        $"New best escape point '{point.name}' at {FormatVector(sampledPosition)} score={score:0.##}."
-                    );
-                }
-            }
-        }
 
         float angleOffset = UnityEngine.Random.Range(0f, 360f);
         int sampleCount = Mathf.Max(1, fleeDestinationSampleCount);
@@ -972,6 +954,7 @@ public class RunawayObject : MonoBehaviour
         tauntPlayedForCurrentDestination = true;
         tauntUntil = Time.time + destinationTauntDuration;
         agent.isStopped = true;
+        PlayTauntStartSound();
         LogDebug(
             $"Entering destination taunt for {destinationTauntDuration:0.##}s at {FormatVector(agent.nextPosition)}."
         );
@@ -996,5 +979,32 @@ public class RunawayObject : MonoBehaviour
 
         if (restoreRigidbodySettings)
             RestoreRigidbodySettings();
+    }
+
+    private void PlayRunStartEffects()
+    {
+        PlaySound(runStartSound);
+
+        if (runStartParticles != null)
+            runStartParticles.Play(true);
+    }
+
+    private void PlayTauntStartSound()
+    {
+        PlaySound(tauntStartSound);
+    }
+
+    private void PlaySound(AudioClip clip)
+    {
+        if (clip == null)
+            return;
+
+        if (audioSource == null)
+            audioSource = GetComponent<AudioSource>();
+
+        if (audioSource == null)
+            audioSource = gameObject.AddComponent<AudioSource>();
+
+        audioSource.PlayOneShot(clip);
     }
 }

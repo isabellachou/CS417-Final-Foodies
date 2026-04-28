@@ -106,3 +106,4 @@ InitTestScene*.unity*
 /[Aa]ssets/[Ss]ceneDependencyCache*
 
 AGENTS.md
+.DS_Store
