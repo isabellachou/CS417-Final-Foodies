@@ -54,7 +54,7 @@ public class RunawayObject : MonoBehaviour
     private int fleeDestinationSampleCount = 16;
 
     [SerializeField]
-    private float fleeRepathInterval = 0.75f;
+    private float fleeRepathInterval = 3f;
 
     [SerializeField]
     private float navMeshSampleRadius = 2f;
@@ -77,23 +77,13 @@ public class RunawayObject : MonoBehaviour
     private float bobHeight = 0.06f;
 
     [SerializeField]
-    private float bobFrequency = 2.5f;
+    private float bobFrequency = 1.5f;
 
     [SerializeField]
-    private float swayDistance = 0.05f;
+    private float swayDistance = 0.03f;
 
     [SerializeField]
-    private float swayFrequency = 1.75f;
-
-    [Header("Rolling")]
-    [SerializeField]
-    private bool rollWhileMoving = true;
-
-    [SerializeField]
-    private float rollRadius = 0.15f;
-
-    [SerializeField]
-    private float rollRotationMultiplier = 1f;
+    private float swayFrequency = 2f;
 
     [Header("Timing")]
     [SerializeField]
@@ -101,6 +91,13 @@ public class RunawayObject : MonoBehaviour
 
     [SerializeField]
     private float cooldownAfterCaught = 10f;
+
+    [SerializeField]
+    private float destinationTauntDuration = 3f;
+
+    [SerializeField]
+    [Range(0.05f, 1f)]
+    private float destinationTauntMotionScale = 0.6f;
 
     [Header("Debug")]
     [SerializeField]
@@ -130,9 +127,12 @@ public class RunawayObject : MonoBehaviour
     private float cooldownUntil;
     private float nextFleeRepathTime;
     private float nextReactiveRepathTime;
+    private float tauntUntil;
+    private bool tauntPlayedForCurrentDestination;
     private float playerDistanceAtLastDestination = float.PositiveInfinity;
     private float groundClearance;
     private Vector3 lastAgentPosition;
+    private Vector3 lastMovementDirection = Vector3.forward;
     private Coroutine activationCoroutine;
 
     private void Awake()
@@ -162,6 +162,7 @@ public class RunawayObject : MonoBehaviour
     private void OnEnable()
     {
         grabInteractable.selectEntered.AddListener(OnGrabbed);
+        grabInteractable.selectExited.AddListener(OnReleased);
 
         if (debugAction != null)
         {
@@ -177,6 +178,7 @@ public class RunawayObject : MonoBehaviour
     private void OnDisable()
     {
         grabInteractable.selectEntered.RemoveListener(OnGrabbed);
+        grabInteractable.selectExited.RemoveListener(OnReleased);
         StopActivationRoutine();
         StopAgent();
 
@@ -213,8 +215,13 @@ public class RunawayObject : MonoBehaviour
 
     private void OnGrabbed(SelectEnterEventArgs args)
     {
-        if (State == RunawayState.Activating || State == RunawayState.Fleeing)
-            Catch();
+        if (State != RunawayState.Idle)
+            StopRunawayMotion(true);
+    }
+
+    private void OnReleased(SelectExitEventArgs args)
+    {
+        StopRunawayMotion(true);
     }
 
     [ContextMenu("Activate Runaway")]
@@ -242,6 +249,8 @@ public class RunawayObject : MonoBehaviour
         State = RunawayState.Caught;
         currentTarget = null;
         cooldownUntil = Time.time + cooldownAfterCaught;
+        tauntUntil = 0f;
+        tauntPlayedForCurrentDestination = false;
 
         StopAgent();
         RestoreRigidbodySettings();
@@ -256,6 +265,8 @@ public class RunawayObject : MonoBehaviour
         StopActivationRoutine();
         currentTarget = null;
         State = RunawayState.Idle;
+        tauntUntil = 0f;
+        tauntPlayedForCurrentDestination = false;
 
         StopAgent();
         RestoreRigidbodySettings();
@@ -327,6 +338,26 @@ public class RunawayObject : MonoBehaviour
 
         agent.speed = fleeSpeed;
 
+        if (IsTaunting())
+        {
+            agent.isStopped = true;
+            ApplyAgentMovementVisualOffset(destinationTauntMotionScale, true);
+            return;
+        }
+
+        agent.isStopped = false;
+
+        if (
+            HasReachedDestination()
+            && !tauntPlayedForCurrentDestination
+            && destinationTauntDuration > 0f
+        )
+        {
+            BeginDestinationTaunt();
+            ApplyAgentMovementVisualOffset(destinationTauntMotionScale, true);
+            return;
+        }
+
         if (ShouldChooseNewFleeDestination(out string repathReason))
         {
             LogDebug($"Choosing new flee destination. Reason: {repathReason}");
@@ -336,13 +367,14 @@ public class RunawayObject : MonoBehaviour
         }
 
         ApplyAgentMovementVisualOffset();
-        RollFromAgentMovement();
     }
 
     private void HandleEscaped()
     {
         currentTarget = null;
         cooldownUntil = Time.time + cooldownAfterCaught;
+        tauntUntil = 0f;
+        tauntPlayedForCurrentDestination = false;
 
         OnRunawayEscaped?.Invoke(this);
 
@@ -370,7 +402,6 @@ public class RunawayObject : MonoBehaviour
 
         agent.speed = returnSpeed;
         ApplyAgentMovementVisualOffset();
-        RollFromAgentMovement();
 
         if (!HasReachedDestination())
             return;
@@ -470,6 +501,7 @@ public class RunawayObject : MonoBehaviour
         }
 
         currentTarget = target;
+        tauntPlayedForCurrentDestination = false;
         nextFleeRepathTime = Time.time + fleeRepathInterval;
         nextReactiveRepathTime = Time.time + reactiveRepathInterval;
         playerDistanceAtLastDestination = GetHorizontalPlayerDistance(agent.nextPosition);
@@ -778,7 +810,7 @@ public class RunawayObject : MonoBehaviour
         return playerPositionReference;
     }
 
-    private void ApplyAgentMovementVisualOffset()
+    private void ApplyAgentMovementVisualOffset(float motionScale = 1f, bool forceMotion = false)
     {
         if (!agent.enabled || !agent.isOnNavMesh)
             return;
@@ -788,50 +820,51 @@ public class RunawayObject : MonoBehaviour
             agent.desiredVelocity.sqrMagnitude > 0.01f ? agent.desiredVelocity : agent.velocity;
         velocity.y = 0f;
 
-        float speedMultiplier = Mathf.InverseLerp(
-            0.05f,
-            Mathf.Max(0.05f, agent.speed),
-            velocity.magnitude
-        );
         Vector3 offset = Vector3.up * groundClearance;
+        float movementMultiplier = forceMotion
+            ? Mathf.Clamp01(motionScale)
+            : Mathf.InverseLerp(0.05f, Mathf.Max(0.05f, agent.speed), velocity.magnitude);
+        float frequencyMultiplier = forceMotion ? Mathf.Clamp01(motionScale) : 1f;
 
-        if (speedMultiplier > 0.01f)
+        if (velocity.sqrMagnitude > 0.0001f)
         {
-            Vector3 moveDirection = velocity.normalized;
+            lastMovementDirection = velocity.normalized;
+            lastMovementDirection.y = 0f;
+            if (lastMovementDirection.sqrMagnitude > 0.0001f)
+                lastMovementDirection.Normalize();
+        }
+
+        Vector3 moveDirection =
+            velocity.sqrMagnitude > 0.0001f ? velocity.normalized : lastMovementDirection;
+        moveDirection.y = 0f;
+
+        if (moveDirection.sqrMagnitude <= 0.0001f)
+            moveDirection = transform.forward;
+
+        if (moveDirection.sqrMagnitude > 0.0001f)
+            moveDirection.Normalize();
+
+        if (movementMultiplier > 0.01f)
+        {
             Vector3 swayDirection = Vector3.Cross(Vector3.up, moveDirection).normalized;
-            float bob = Mathf.Abs(Mathf.Sin(Time.time * bobFrequency * Mathf.PI * 2f)) * bobHeight;
-            float sway = Mathf.Sin(Time.time * swayFrequency * Mathf.PI * 2f) * swayDistance;
-            offset += Vector3.up * bob * speedMultiplier;
-            offset += swayDirection * sway * speedMultiplier;
+            float bob =
+                Mathf.Abs(Mathf.Sin(Time.time * bobFrequency * frequencyMultiplier * Mathf.PI * 2f))
+                * bobHeight;
+            float sway =
+                Mathf.Sin(Time.time * swayFrequency * frequencyMultiplier * Mathf.PI * 2f)
+                * swayDistance;
+            offset += Vector3.up * bob * movementMultiplier;
+            offset += swayDirection * sway * movementMultiplier;
         }
 
         rb.MovePosition(navPosition + offset);
     }
 
-    private void RollFromAgentMovement()
-    {
-        Vector3 currentAgentPosition = agent.enabled ? agent.nextPosition : transform.position;
-        Vector3 step = currentAgentPosition - lastAgentPosition;
-        step.y = 0f;
-        lastAgentPosition = currentAgentPosition;
-
-        if (!rollWhileMoving || rollRadius <= 0f || step.sqrMagnitude <= Mathf.Epsilon)
-            return;
-
-        Vector3 rollDirection = step.normalized;
-        Vector3 rollAxis = Vector3.Cross(Vector3.up, rollDirection);
-
-        if (rollAxis.sqrMagnitude <= Mathf.Epsilon)
-            return;
-
-        float rollDegrees = step.magnitude / rollRadius * Mathf.Rad2Deg * rollRotationMultiplier;
-        Quaternion rollDelta = Quaternion.AngleAxis(rollDegrees, rollAxis.normalized);
-        rb.MoveRotation(rollDelta * rb.rotation);
-    }
-
     private void FinishReturn()
     {
         StopAgent();
+        tauntUntil = 0f;
+        tauntPlayedForCurrentDestination = false;
         rb.position = originalPosition;
         rb.rotation = originalRotation;
         RestoreRigidbodySettings();
@@ -905,7 +938,11 @@ public class RunawayObject : MonoBehaviour
     private void StopAgent()
     {
         if (!agent.enabled)
+        {
+            tauntUntil = 0f;
+            tauntPlayedForCurrentDestination = false;
             return;
+        }
 
         if (agent.isOnNavMesh)
         {
@@ -914,6 +951,8 @@ public class RunawayObject : MonoBehaviour
         }
 
         agent.enabled = false;
+        tauntUntil = 0f;
+        tauntPlayedForCurrentDestination = false;
     }
 
     private void StopActivationRoutine()
@@ -923,5 +962,39 @@ public class RunawayObject : MonoBehaviour
 
         StopCoroutine(activationCoroutine);
         activationCoroutine = null;
+    }
+
+    private void BeginDestinationTaunt()
+    {
+        if (destinationTauntDuration <= 0f)
+            return;
+
+        tauntPlayedForCurrentDestination = true;
+        tauntUntil = Time.time + destinationTauntDuration;
+        agent.isStopped = true;
+        LogDebug(
+            $"Entering destination taunt for {destinationTauntDuration:0.##}s at {FormatVector(agent.nextPosition)}."
+        );
+    }
+
+    private bool IsTaunting()
+    {
+        return Time.time < tauntUntil;
+    }
+
+    private void StopRunawayMotion(bool restoreRigidbodySettings)
+    {
+        StopActivationRoutine();
+        currentTarget = null;
+        cooldownUntil = 0f;
+        tauntUntil = 0f;
+        tauntPlayedForCurrentDestination = false;
+        State = RunawayState.Idle;
+
+        if (agent.enabled)
+            StopAgent();
+
+        if (restoreRigidbodySettings)
+            RestoreRigidbodySettings();
     }
 }

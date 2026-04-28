@@ -297,24 +297,23 @@ MonoBehaviour:
   targetReachDistance: 0.25
   returnToOriginalPositionAfterEscape: 0
   returnSpeed: 1.5
-  fleeDestinationDistance: 4
+  fleeDestinationDistance: 2
   fleeDestinationSampleRadius: 2
   fleeDestinationSampleCount: 16
-  fleeRepathInterval: 0.75
+  fleeRepathInterval: 3
   navMeshSampleRadius: 2
-  playerCloserRepathDistance: 2
+  playerCloserRepathDistance: 0.5
   reactiveRepathInterval: 0.25
   fallbackGroundClearance: 0.15
   groundClearancePadding: 0.02
   bobHeight: 0.06
-  bobFrequency: 2.5
-  swayDistance: 0.05
-  swayFrequency: 1.75
-  rollWhileMoving: 1
-  rollRadius: 0.15
-  rollRotationMultiplier: 1
+  bobFrequency: 1.5
+  swayDistance: 0.03
+  swayFrequency: 2
   activationDelay: 0.75
   cooldownAfterCaught: 10
+  destinationTauntDuration: 3
+  destinationTauntMotionScale: 0.6
   debugLogging: 1
   debugAction: {fileID: -6131295136447488360, guid: c348712bda248c246b8c49b3db54643f, type: 3}
 --- !u!114 &107792025
