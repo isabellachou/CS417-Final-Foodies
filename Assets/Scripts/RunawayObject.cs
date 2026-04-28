@@ -102,6 +102,9 @@ public class RunawayObject : MonoBehaviour
     private float cooldownAfterCaught = 10f;
 
     [SerializeField]
+    private float soundCooldown = 10f;
+
+    [SerializeField]
     private float destinationTauntDuration = 3f;
 
     [SerializeField]
@@ -134,6 +137,7 @@ public class RunawayObject : MonoBehaviour
     private CollisionDetectionMode originalCollisionDetectionMode;
     private RigidbodyInterpolation originalInterpolation;
     private float cooldownUntil;
+    private float nextSoundAllowedTime;
     private float nextFleeRepathTime;
     private float nextReactiveRepathTime;
     private float tauntUntil;
@@ -143,6 +147,12 @@ public class RunawayObject : MonoBehaviour
     private Vector3 lastAgentPosition;
     private Vector3 lastMovementDirection = Vector3.forward;
     private Coroutine activationCoroutine;
+    private Coroutine runStartParticlesCoroutine;
+    private Transform runStartParticlesOriginalParent;
+    private Vector3 runStartParticlesOriginalLocalPosition;
+    private Quaternion runStartParticlesOriginalLocalRotation;
+    private Vector3 runStartParticlesOriginalLocalScale;
+    private ParticleSystemSimulationSpace runStartParticlesOriginalSimulationSpace;
 
     private void Awake()
     {
@@ -168,6 +178,15 @@ public class RunawayObject : MonoBehaviour
 
         groundClearance = CalculateGroundClearance();
         ResolvePlayerPositionReference();
+
+        if (runStartParticles != null)
+        {
+            runStartParticlesOriginalParent = runStartParticles.transform.parent;
+            runStartParticlesOriginalLocalPosition = runStartParticles.transform.localPosition;
+            runStartParticlesOriginalLocalRotation = runStartParticles.transform.localRotation;
+            runStartParticlesOriginalLocalScale = runStartParticles.transform.localScale;
+            runStartParticlesOriginalSimulationSpace = runStartParticles.main.simulationSpace;
+        }
     }
 
     private void OnEnable()
@@ -191,6 +210,7 @@ public class RunawayObject : MonoBehaviour
         grabInteractable.selectEntered.RemoveListener(OnGrabbed);
         grabInteractable.selectExited.RemoveListener(OnReleased);
         StopActivationRoutine();
+        StopRunStartParticlesRoutine();
         StopAgent();
 
         if (debugAction != null)
@@ -276,6 +296,7 @@ public class RunawayObject : MonoBehaviour
         StopActivationRoutine();
         currentTarget = null;
         State = RunawayState.Idle;
+        nextSoundAllowedTime = 0f;
         tauntUntil = 0f;
         tauntPlayedForCurrentDestination = false;
 
@@ -985,8 +1006,11 @@ public class RunawayObject : MonoBehaviour
     {
         PlaySound(runStartSound);
 
-        if (runStartParticles != null)
-            runStartParticles.Play(true);
+        if (runStartParticles == null)
+            return;
+
+        StopRunStartParticlesRoutine();
+        runStartParticlesCoroutine = StartCoroutine(PlayDetachedRunStartParticles());
     }
 
     private void PlayTauntStartSound()
@@ -999,6 +1023,9 @@ public class RunawayObject : MonoBehaviour
         if (clip == null)
             return;
 
+        if (Time.time < nextSoundAllowedTime)
+            return;
+
         if (audioSource == null)
             audioSource = GetComponent<AudioSource>();
 
@@ -1006,5 +1033,59 @@ public class RunawayObject : MonoBehaviour
             audioSource = gameObject.AddComponent<AudioSource>();
 
         audioSource.PlayOneShot(clip);
+        nextSoundAllowedTime = Time.time + soundCooldown;
+    }
+
+    private IEnumerator PlayDetachedRunStartParticles()
+    {
+        Transform particlesTransform = runStartParticles.transform;
+        Vector3 worldPosition = particlesTransform.position;
+        Quaternion worldRotation = particlesTransform.rotation;
+        ParticleSystem.MainModule main = runStartParticles.main;
+
+        runStartParticles.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+        main.simulationSpace = ParticleSystemSimulationSpace.World;
+
+        particlesTransform.SetParent(null, true);
+        particlesTransform.SetPositionAndRotation(worldPosition, worldRotation);
+        runStartParticles.Play(true);
+
+        float waitDuration =
+            main.duration + main.startLifetime.constantMax + 0.1f;
+        yield return new WaitForSeconds(waitDuration);
+
+        runStartParticles.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+        particlesTransform.SetParent(runStartParticlesOriginalParent, false);
+        particlesTransform.localPosition = runStartParticlesOriginalLocalPosition;
+        particlesTransform.localRotation = runStartParticlesOriginalLocalRotation;
+        particlesTransform.localScale = runStartParticlesOriginalLocalScale;
+        main.simulationSpace = runStartParticlesOriginalSimulationSpace;
+        runStartParticlesCoroutine = null;
+    }
+
+    private void StopRunStartParticlesRoutine()
+    {
+        if (runStartParticlesCoroutine != null)
+        {
+            StopCoroutine(runStartParticlesCoroutine);
+            runStartParticlesCoroutine = null;
+        }
+
+        if (runStartParticles == null)
+            return;
+
+        runStartParticles.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+
+        Transform particlesTransform = runStartParticles.transform;
+        if (particlesTransform.parent != runStartParticlesOriginalParent)
+        {
+            particlesTransform.SetParent(runStartParticlesOriginalParent, false);
+            particlesTransform.localPosition = runStartParticlesOriginalLocalPosition;
+            particlesTransform.localRotation = runStartParticlesOriginalLocalRotation;
+            particlesTransform.localScale = runStartParticlesOriginalLocalScale;
+        }
+
+        ParticleSystem.MainModule main = runStartParticles.main;
+        main.simulationSpace = runStartParticlesOriginalSimulationSpace;
     }
 }
