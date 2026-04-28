@@ -423,7 +423,7 @@ MonoBehaviour:
   runStartParticles: {fileID: 441232415}
   runStartSound: {fileID: 8300000, guid: 935d3459c093a4dbfb016794461af557, type: 3}
   tauntStartSound: {fileID: 8300000, guid: 19514a206e93a4507b9d68b18adeded1, type: 3}
-  fleeSpeed: 0.5
+  fleeSpeed: 0.25
   targetReachDistance: 0.25
   returnToOriginalPositionAfterEscape: 0
   returnSpeed: 1.5
@@ -438,10 +438,11 @@ MonoBehaviour:
   groundClearancePadding: 0.02
   bobHeight: 0.06
   bobFrequency: 1.5
-  swayDistance: 0.03
+  swayDistance: 0.02
   swayFrequency: 2
   activationDelay: 0.75
   cooldownAfterCaught: 10
+  soundCooldown: 10
   destinationTauntDuration: 3
   destinationTauntMotionScale: 0.6
   debugLogging: 1
