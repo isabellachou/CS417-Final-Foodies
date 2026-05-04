@@ -2,14 +2,15 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.InputSystem;
-using UnityEngine.XR;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
 [RequireComponent(typeof(XRGrabInteractable))]
 [RequireComponent(typeof(Rigidbody))]
-public class RunawayObject : MonoBehaviour
+[RequireComponent(typeof(NavMeshAgent))]
+public partial class RunawayObject : MonoBehaviour
 {
     public enum RunawayState
     {
@@ -18,24 +19,31 @@ public class RunawayObject : MonoBehaviour
         Fleeing,
         Caught,
         Returning,
+        Despawning,
     }
 
     [Header("References")]
     [SerializeField]
-    private Transform player;
+    private bool preferPlayerCameraForDistance = true;
 
     [SerializeField]
-    private List<Transform> escapePoints = new();
+    private AudioSource audioSource;
+
+    [SerializeField]
+    private ParticleSystem runStartParticles;
+
+    [SerializeField]
+    private AudioClip runStartSound;
+
+    [SerializeField]
+    private AudioClip tauntStartSound;
 
     [Header("Movement")]
     [SerializeField]
-    private float fleeSpeed = 1.5f;
+    private float fleeSpeed = 0.25f;
 
     [SerializeField]
     private float targetReachDistance = 0.25f;
-
-    [SerializeField]
-    private bool keepFleeingAfterReachingTarget = false;
 
     [SerializeField]
     private bool returnToOriginalPositionAfterEscape = false;
@@ -43,15 +51,46 @@ public class RunawayObject : MonoBehaviour
     [SerializeField]
     private float returnSpeed = 1.5f;
 
-    [Header("Rolling")]
     [SerializeField]
-    private bool rollWhileMoving = true;
+    private float fleeDestinationDistance = 2f;
 
     [SerializeField]
-    private float rollRadius = 0.15f;
+    private float fleeDestinationSampleRadius = 2f;
 
     [SerializeField]
-    private float rollRotationMultiplier = 1f;
+    private int fleeDestinationSampleCount = 16;
+
+    [SerializeField]
+    private float fleeRepathInterval = 3f;
+
+    [SerializeField]
+    private float navMeshSampleRadius = 2f;
+
+    [SerializeField]
+    private float playerCloserRepathDistance = 0.5f;
+
+    [SerializeField]
+    private float reactiveRepathInterval = 0.25f;
+
+    [Header("Grounding")]
+    [SerializeField]
+    private float fallbackGroundClearance = 0.15f;
+
+    [SerializeField]
+    private float groundClearancePadding = 0.02f;
+
+    [Header("Movement Style")]
+    [SerializeField]
+    private float bobHeight = 0.06f;
+
+    [SerializeField]
+    private float bobFrequency = 1.5f;
+
+    [SerializeField]
+    private float swayDistance = 0.02f;
+
+    [SerializeField]
+    private float swayFrequency = 2f;
 
     [Header("Timing")]
     [SerializeField]
@@ -60,20 +99,60 @@ public class RunawayObject : MonoBehaviour
     [SerializeField]
     private float cooldownAfterCaught = 10f;
 
+    [SerializeField]
+    private float soundCooldown = 10f;
+
+    [SerializeField]
+    [Min(0f)]
+    private float tauntInterval = 10f;
+
+    [SerializeField]
+    private float tauntDuration = 3f;
+
+    [SerializeField]
+    [Range(0.05f, 1f)]
+    private float tauntMotionScale = 0.6f;
+
+    [Header("Lifecycle")]
+    [SerializeField]
+    private bool despawnAfterFleeTime = false;
+
+    [SerializeField]
+    [Min(0f)]
+    private float fleeDespawnTimeLimit = 45f;
+
+    [Header("Auto Activation")]
+    [SerializeField]
+    private bool autoActivateAfterReset = true;
+
+    [SerializeField]
+    [Min(0f)]
+    private float autoActivationMinDelay = 30f;
+
+    [SerializeField]
+    [Min(0f)]
+    private float autoActivationMaxDelay = 120f;
+
     [Header("Debug")]
+    [SerializeField]
+    private bool debugLogging = false;
+
     [SerializeField]
     private InputActionReference debugAction;
 
     public event Action<RunawayObject> OnRunawayStarted;
     public event Action<RunawayObject> OnRunawayCaught;
     public event Action<RunawayObject> OnRunawayEscaped;
+    public event Action<RunawayObject> OnRunawayDespawned;
 
     public RunawayState State { get; private set; } = RunawayState.Idle;
     public bool IsOnCooldown => Time.time < cooldownUntil;
 
     private XRGrabInteractable grabInteractable;
     private Rigidbody rb;
+    private NavMeshAgent agent;
     private Transform currentTarget;
+    private Transform playerPositionReference;
     private Vector3 originalPosition;
     private Quaternion originalRotation;
     private bool originalIsKinematic;
@@ -81,12 +160,33 @@ public class RunawayObject : MonoBehaviour
     private CollisionDetectionMode originalCollisionDetectionMode;
     private RigidbodyInterpolation originalInterpolation;
     private float cooldownUntil;
+    private float nextSoundAllowedTime;
+    private float nextFleeRepathTime;
+    private float nextReactiveRepathTime;
+    private float tauntUntil;
+    private float nextTauntTime;
+    private float fleeDespawnAt = float.PositiveInfinity;
+    private float playerDistanceAtLastDestination = float.PositiveInfinity;
+    private float groundClearance;
+    private Vector3 lastAgentPosition;
+    private Vector3 lastMovementDirection = Vector3.forward;
     private Coroutine activationCoroutine;
+    private Coroutine autoActivationCoroutine;
+    private Coroutine runStartParticlesCoroutine;
+    private Transform runStartParticlesOriginalParent;
+    private Vector3 runStartParticlesOriginalLocalPosition;
+    private Quaternion runStartParticlesOriginalLocalRotation;
+    private Vector3 runStartParticlesOriginalLocalScale;
+    private ParticleSystemSimulationSpace runStartParticlesOriginalSimulationSpace;
 
     private void Awake()
     {
         grabInteractable = GetComponent<XRGrabInteractable>();
         rb = GetComponent<Rigidbody>();
+        agent = GetComponent<NavMeshAgent>();
+        ResolvePrefabReferences();
+        if (agent == null)
+            agent = gameObject.AddComponent<NavMeshAgent>();
 
         originalPosition = transform.position;
         originalRotation = transform.rotation;
@@ -94,41 +194,121 @@ public class RunawayObject : MonoBehaviour
         originalUseGravity = rb.useGravity;
         originalCollisionDetectionMode = rb.collisionDetectionMode;
         originalInterpolation = rb.interpolation;
+
+        agent.enabled = false;
+        agent.autoTraverseOffMeshLink = true;
+        agent.updatePosition = false;
+        agent.updateRotation = false;
+
+        groundClearance = CalculateGroundClearance();
+        ResolvePlayerPositionReference();
+
+        if (runStartParticles != null)
+        {
+            runStartParticlesOriginalParent = runStartParticles.transform.parent;
+            runStartParticlesOriginalLocalPosition = runStartParticles.transform.localPosition;
+            runStartParticlesOriginalLocalRotation = runStartParticles.transform.localRotation;
+            runStartParticlesOriginalLocalScale = runStartParticles.transform.localScale;
+            runStartParticlesOriginalSimulationSpace = runStartParticles.main.simulationSpace;
+        }
+    }
+
+    private void Reset()
+    {
+        ResolvePrefabReferences();
+    }
+
+    private void Start()
+    {
+        StartAutoActivationTimer();
+    }
+
+    private void OnValidate()
+    {
+        ResolvePrefabReferences();
+
+        if (autoActivationMaxDelay < autoActivationMinDelay)
+            autoActivationMaxDelay = autoActivationMinDelay;
+
+        if (tauntInterval < 0f)
+            tauntInterval = 0f;
+
+        if (fleeDespawnTimeLimit < 0f)
+            fleeDespawnTimeLimit = 0f;
+    }
+
+    private void ResolvePrefabReferences()
+    {
+        if (audioSource == null)
+            audioSource = GetComponent<AudioSource>();
+
+        if (audioSource == null)
+            audioSource = GetComponentInChildren<AudioSource>(true);
+
+        if (runStartParticles == null)
+            runStartParticles = GetComponentInChildren<ParticleSystem>(true);
     }
 
     private void OnEnable()
     {
         grabInteractable.selectEntered.AddListener(OnGrabbed);
-        debugAction.action.Enable();
-        debugAction.action.performed += OnDebugActivate;
+        grabInteractable.selectExited.AddListener(OnReleased);
+
+        if (debugAction != null)
+        {
+            InputAction action = debugAction.action;
+            if (action != null)
+            {
+                action.Enable();
+                action.performed += OnDebugActivate;
+            }
+        }
     }
 
     private void OnDisable()
     {
         grabInteractable.selectEntered.RemoveListener(OnGrabbed);
+        grabInteractable.selectExited.RemoveListener(OnReleased);
+        StopActivationRoutine();
+        StopAutoActivationTimer();
+        StopRunStartParticlesRoutine();
+        StopAgent();
+
+        if (debugAction != null)
+        {
+            InputAction action = debugAction.action;
+            if (action != null)
+            {
+                action.performed -= OnDebugActivate;
+                action.Disable();
+            }
+        }
     }
 
-    private void Update() { }
-
-    private void OnDebugActivate(InputAction.CallbackContext ctx)
-    {
-        Debug.Log("Debug activate triggered");
-        ActivateRunaway();
-    }
-
-    private void FixedUpdate()
+    private void Update()
     {
         if (grabInteractable.isSelected)
             return;
 
         if (State == RunawayState.Fleeing)
         {
-            MoveTowardTarget();
+            UpdateFleeing();
             return;
         }
 
         if (State == RunawayState.Returning)
-            MoveTowardOriginalPosition();
+            UpdateReturning();
+    }
+
+    private void OnGrabbed(SelectEnterEventArgs args)
+    {
+        if (State != RunawayState.Idle)
+            StopRunawayMotion(true);
+    }
+
+    private void OnReleased(SelectExitEventArgs args)
+    {
+        StopRunawayMotion(true);
     }
 
     [ContextMenu("Activate Runaway")]
@@ -143,6 +323,7 @@ public class RunawayObject : MonoBehaviour
         if (grabInteractable.isSelected)
             return;
 
+        StopAutoActivationTimer();
         activationCoroutine = StartCoroutine(ActivateRoutine());
     }
 
@@ -155,8 +336,12 @@ public class RunawayObject : MonoBehaviour
 
         State = RunawayState.Caught;
         currentTarget = null;
+        ClearFleeDespawnTimer();
         cooldownUntil = Time.time + cooldownAfterCaught;
+        tauntUntil = 0f;
+        nextTauntTime = 0f;
 
+        StopAgent();
         RestoreRigidbodySettings();
 
         OnRunawayCaught?.Invoke(this);
@@ -169,198 +354,57 @@ public class RunawayObject : MonoBehaviour
         StopActivationRoutine();
         currentTarget = null;
         State = RunawayState.Idle;
+        ClearFleeDespawnTimer();
+        nextSoundAllowedTime = 0f;
+        tauntUntil = 0f;
+        nextTauntTime = 0f;
 
+        StopAgent();
         RestoreRigidbodySettings();
         rb.position = originalPosition;
         rb.rotation = originalRotation;
         rb.linearVelocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
+
+        StartAutoActivationTimer();
     }
 
-    private IEnumerator ActivateRoutine()
+    private void StartAutoActivationTimer()
     {
-        Debug.Log("Runaway activated!");
-        State = RunawayState.Activating;
-        currentTarget = ChooseEscapePoint();
+        StopAutoActivationTimer();
 
-        OnRunawayStarted?.Invoke(this);
-
-        yield return new WaitForSeconds(activationDelay);
-
-        activationCoroutine = null;
-
-        if (State != RunawayState.Activating)
-            yield break;
-
-        if (grabInteractable.isSelected || currentTarget == null)
-        {
-            State = RunawayState.Idle;
-            RestoreRigidbodySettings();
-            yield break;
-        }
-
-        PrepareRigidbodyForRunawayMovement();
-        State = RunawayState.Fleeing;
-    }
-
-    private Transform ChooseEscapePoint()
-    {
-        if (escapePoints == null || escapePoints.Count == 0)
-            return null;
-
-        Transform best = null;
-        float bestDistance = float.NegativeInfinity;
-        Vector3 from = player != null ? player.position : transform.position;
-
-        foreach (Transform point in escapePoints)
-        {
-            if (point == null || point == currentTarget)
-                continue;
-
-            float distance = Vector3.Distance(from, point.position);
-
-            if (distance > bestDistance)
-            {
-                bestDistance = distance;
-                best = point;
-            }
-        }
-
-        return best;
-    }
-
-    private void MoveTowardTarget()
-    {
-        if (currentTarget == null)
-        {
-            HandleEscaped();
-            return;
-        }
-
-        Vector3 current = rb.position;
-        Vector3 target = currentTarget.position;
-        Vector3 direction = target - current;
-        direction.y = 0f;
-
-        if (direction.magnitude <= targetReachDistance)
-        {
-            HandleReachedTarget();
-            return;
-        }
-
-        Vector3 step = direction.normalized * fleeSpeed * Time.fixedDeltaTime;
-
-        if (step.sqrMagnitude > direction.sqrMagnitude)
-            step = direction;
-
-        MoveAndRoll(current + step, step);
-    }
-
-    private void MoveTowardOriginalPosition()
-    {
-        Vector3 current = rb.position;
-        Vector3 direction = originalPosition - current;
-
-        if (direction.magnitude <= targetReachDistance)
-        {
-            rb.MovePosition(originalPosition);
-            rb.MoveRotation(originalRotation);
-            RestoreRigidbodySettings();
-            State = RunawayState.Idle;
-            return;
-        }
-
-        Vector3 step = direction.normalized * returnSpeed * Time.fixedDeltaTime;
-
-        if (step.sqrMagnitude > direction.sqrMagnitude)
-            step = direction;
-
-        MoveAndRoll(current + step, step);
-    }
-
-    private void HandleReachedTarget()
-    {
-        if (keepFleeingAfterReachingTarget)
-        {
-            Transform nextTarget = ChooseEscapePoint();
-            if (nextTarget != null)
-            {
-                currentTarget = nextTarget;
-                return;
-            }
-        }
-
-        HandleEscaped();
-    }
-
-    private void HandleEscaped()
-    {
-        currentTarget = null;
-        cooldownUntil = Time.time + cooldownAfterCaught;
-
-        OnRunawayEscaped?.Invoke(this);
-
-        if (returnToOriginalPositionAfterEscape)
-        {
-            State = RunawayState.Returning;
-            PrepareRigidbodyForRunawayMovement();
-            return;
-        }
-
-        RestoreRigidbodySettings();
-        State = RunawayState.Idle;
-    }
-
-    private void MoveAndRoll(Vector3 nextPosition, Vector3 step)
-    {
-        rb.MovePosition(nextPosition);
-
-        if (!rollWhileMoving || rollRadius <= 0f || step.sqrMagnitude <= Mathf.Epsilon)
+        if (!autoActivateAfterReset)
             return;
 
-        Vector3 rollDirection = step.normalized;
-        Vector3 rollAxis = Vector3.Cross(Vector3.up, rollDirection);
-
-        if (rollAxis.sqrMagnitude <= Mathf.Epsilon)
+        if (State != RunawayState.Idle)
             return;
 
-        float rollDegrees = step.magnitude / rollRadius * Mathf.Rad2Deg * rollRotationMultiplier;
-        Quaternion rollDelta = Quaternion.AngleAxis(rollDegrees, rollAxis.normalized);
-        rb.MoveRotation(rollDelta * rb.rotation);
+        float minDelay = Mathf.Max(0f, autoActivationMinDelay);
+        float maxDelay = Mathf.Max(minDelay, autoActivationMaxDelay);
+        float delay = UnityEngine.Random.Range(minDelay, maxDelay);
+        autoActivationCoroutine = StartCoroutine(AutoActivateAfterDelay(delay));
+        LogDebug($"Scheduled auto activation in {delay:0.##} seconds.");
     }
 
-    private void OnGrabbed(SelectEnterEventArgs args)
+    private void StopAutoActivationTimer()
     {
-        if (State == RunawayState.Activating || State == RunawayState.Fleeing)
-            Catch();
-    }
-
-    private void PrepareRigidbodyForRunawayMovement()
-    {
-        rb.isKinematic = true;
-        rb.useGravity = false;
-        rb.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
-        rb.interpolation = RigidbodyInterpolation.Interpolate;
-        rb.linearVelocity = Vector3.zero;
-        rb.angularVelocity = Vector3.zero;
-    }
-
-    private void RestoreRigidbodySettings()
-    {
-        rb.isKinematic = originalIsKinematic;
-        rb.useGravity = originalUseGravity;
-        rb.collisionDetectionMode = originalCollisionDetectionMode;
-        rb.interpolation = originalInterpolation;
-        rb.linearVelocity = Vector3.zero;
-        rb.angularVelocity = Vector3.zero;
-    }
-
-    private void StopActivationRoutine()
-    {
-        if (activationCoroutine == null)
+        if (autoActivationCoroutine == null)
             return;
 
-        StopCoroutine(activationCoroutine);
-        activationCoroutine = null;
+        StopCoroutine(autoActivationCoroutine);
+        autoActivationCoroutine = null;
+    }
+
+    private IEnumerator AutoActivateAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        while (State == RunawayState.Idle && (grabInteractable.isSelected || IsOnCooldown))
+            yield return null;
+
+        autoActivationCoroutine = null;
+
+        if (State == RunawayState.Idle)
+            ActivateRunaway();
     }
 }
