@@ -46,8 +46,7 @@ public partial class RunawayObject
         if (Time.time < nextSoundAllowedTime)
             return;
 
-        if (audioSource == null)
-            audioSource = GetComponent<AudioSource>();
+        ResolvePrefabReferences();
 
         if (audioSource == null)
             audioSource = gameObject.AddComponent<AudioSource>();

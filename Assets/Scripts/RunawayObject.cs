@@ -159,8 +159,7 @@ public partial class RunawayObject : MonoBehaviour
         grabInteractable = GetComponent<XRGrabInteractable>();
         rb = GetComponent<Rigidbody>();
         agent = GetComponent<NavMeshAgent>();
-        if (audioSource == null)
-            audioSource = GetComponent<AudioSource>();
+        ResolvePrefabReferences();
         if (agent == null)
             agent = gameObject.AddComponent<NavMeshAgent>();
 
@@ -187,6 +186,28 @@ public partial class RunawayObject : MonoBehaviour
             runStartParticlesOriginalLocalScale = runStartParticles.transform.localScale;
             runStartParticlesOriginalSimulationSpace = runStartParticles.main.simulationSpace;
         }
+    }
+
+    private void Reset()
+    {
+        ResolvePrefabReferences();
+    }
+
+    private void OnValidate()
+    {
+        ResolvePrefabReferences();
+    }
+
+    private void ResolvePrefabReferences()
+    {
+        if (audioSource == null)
+            audioSource = GetComponent<AudioSource>();
+
+        if (audioSource == null)
+            audioSource = GetComponentInChildren<AudioSource>(true);
+
+        if (runStartParticles == null)
+            runStartParticles = GetComponentInChildren<ParticleSystem>(true);
     }
 
     private void OnEnable()
