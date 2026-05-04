@@ -29,3 +29,5 @@ Jazz BGM: https://pixabay.com/music/bossa-nova-jazz-cafe-music-61sec-505062/ <br
 Sizzle: https://pixabay.com/sound-effects/film-special-effects-sizzle-100449/ <br/>
 Egg crack: https://pixabay.com/sound-effects/film-special-effects-egg-crack5-104555/ <br/>
 Sparkle: https://pixabay.com/sound-effects/film-special-effects-sound-effect-twinklesparkle-115095/ <br/>
+Giggle: https://freesound.org/people/Reitanna/sounds/343984/
+Giggle 2: https://freesound.org/people/Reitanna/sounds/343991/
