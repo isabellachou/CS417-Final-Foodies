@@ -98,6 +98,7 @@ public partial class RunawayObject
     private void FinishReturn()
     {
         StopAgent();
+        ClearFleeDespawnTimer();
         tauntUntil = 0f;
         nextTauntTime = 0f;
         rb.position = originalPosition;

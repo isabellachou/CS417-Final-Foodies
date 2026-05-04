@@ -362,9 +362,11 @@ MonoBehaviour:
   tauntInterval: 10
   tauntDuration: 3
   tauntMotionScale: 0.6
+  despawnAfterFleeTime: 0
+  fleeDespawnTimeLimit: 15
   autoActivateAfterReset: 1
-  autoActivationMinDelay: 30
-  autoActivationMaxDelay: 120
+  autoActivationMinDelay: 5
+  autoActivationMaxDelay: 10
   debugLogging: 1
   debugAction: {fileID: -6131295136447488360, guid: c348712bda248c246b8c49b3db54643f, type: 3}
 --- !u!195 &107792027

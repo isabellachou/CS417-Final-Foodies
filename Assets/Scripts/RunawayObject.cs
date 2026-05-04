@@ -19,6 +19,7 @@ public partial class RunawayObject : MonoBehaviour
         Fleeing,
         Caught,
         Returning,
+        Despawning,
     }
 
     [Header("References")]
@@ -112,6 +113,14 @@ public partial class RunawayObject : MonoBehaviour
     [Range(0.05f, 1f)]
     private float tauntMotionScale = 0.6f;
 
+    [Header("Lifecycle")]
+    [SerializeField]
+    private bool despawnAfterFleeTime = false;
+
+    [SerializeField]
+    [Min(0f)]
+    private float fleeDespawnTimeLimit = 45f;
+
     [Header("Auto Activation")]
     [SerializeField]
     private bool autoActivateAfterReset = true;
@@ -134,6 +143,7 @@ public partial class RunawayObject : MonoBehaviour
     public event Action<RunawayObject> OnRunawayStarted;
     public event Action<RunawayObject> OnRunawayCaught;
     public event Action<RunawayObject> OnRunawayEscaped;
+    public event Action<RunawayObject> OnRunawayDespawned;
 
     public RunawayState State { get; private set; } = RunawayState.Idle;
     public bool IsOnCooldown => Time.time < cooldownUntil;
@@ -155,6 +165,7 @@ public partial class RunawayObject : MonoBehaviour
     private float nextReactiveRepathTime;
     private float tauntUntil;
     private float nextTauntTime;
+    private float fleeDespawnAt = float.PositiveInfinity;
     private float playerDistanceAtLastDestination = float.PositiveInfinity;
     private float groundClearance;
     private Vector3 lastAgentPosition;
@@ -207,6 +218,11 @@ public partial class RunawayObject : MonoBehaviour
         ResolvePrefabReferences();
     }
 
+    private void Start()
+    {
+        StartAutoActivationTimer();
+    }
+
     private void OnValidate()
     {
         ResolvePrefabReferences();
@@ -216,6 +232,9 @@ public partial class RunawayObject : MonoBehaviour
 
         if (tauntInterval < 0f)
             tauntInterval = 0f;
+
+        if (fleeDespawnTimeLimit < 0f)
+            fleeDespawnTimeLimit = 0f;
     }
 
     private void ResolvePrefabReferences()
@@ -317,6 +336,7 @@ public partial class RunawayObject : MonoBehaviour
 
         State = RunawayState.Caught;
         currentTarget = null;
+        ClearFleeDespawnTimer();
         cooldownUntil = Time.time + cooldownAfterCaught;
         tauntUntil = 0f;
         nextTauntTime = 0f;
@@ -334,6 +354,7 @@ public partial class RunawayObject : MonoBehaviour
         StopActivationRoutine();
         currentTarget = null;
         State = RunawayState.Idle;
+        ClearFleeDespawnTimer();
         nextSoundAllowedTime = 0f;
         tauntUntil = 0f;
         nextTauntTime = 0f;
@@ -353,6 +374,9 @@ public partial class RunawayObject : MonoBehaviour
         StopAutoActivationTimer();
 
         if (!autoActivateAfterReset)
+            return;
+
+        if (State != RunawayState.Idle)
             return;
 
         float minDelay = Mathf.Max(0f, autoActivationMinDelay);

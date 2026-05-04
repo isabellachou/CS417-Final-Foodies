@@ -45,12 +45,19 @@ public partial class RunawayObject
 
         PlayRunStartEffects();
         ScheduleNextTaunt();
+        StartFleeDespawnTimer();
         State = RunawayState.Fleeing;
         LogDebug("Entered Fleeing state.");
     }
 
     private void UpdateFleeing()
     {
+        if (HasFleeDespawnTimerExpired())
+        {
+            DespawnAfterFleeTimeout();
+            return;
+        }
+
         bool agentIsOnNavMesh = agent.enabled && agent.isOnNavMesh;
         if (!agentIsOnNavMesh)
         {
@@ -98,6 +105,7 @@ public partial class RunawayObject
     private void HandleEscaped()
     {
         currentTarget = null;
+        ClearFleeDespawnTimer();
         cooldownUntil = Time.time + cooldownAfterCaught;
         tauntUntil = 0f;
         nextTauntTime = 0f;
@@ -493,6 +501,7 @@ public partial class RunawayObject
         StopActivationRoutine();
         currentTarget = null;
         cooldownUntil = 0f;
+        ClearFleeDespawnTimer();
         tauntUntil = 0f;
         nextTauntTime = 0f;
         State = RunawayState.Idle;
@@ -511,5 +520,43 @@ public partial class RunawayObject
 
         StopCoroutine(activationCoroutine);
         activationCoroutine = null;
+    }
+
+    private void StartFleeDespawnTimer()
+    {
+        if (!despawnAfterFleeTime)
+        {
+            ClearFleeDespawnTimer();
+            return;
+        }
+
+        fleeDespawnAt = Time.time + Mathf.Max(0f, fleeDespawnTimeLimit);
+        LogDebug($"Scheduled flee despawn in {fleeDespawnTimeLimit:0.##} seconds.");
+    }
+
+    private void ClearFleeDespawnTimer()
+    {
+        fleeDespawnAt = float.PositiveInfinity;
+    }
+
+    private bool HasFleeDespawnTimerExpired()
+    {
+        return despawnAfterFleeTime && Time.time >= fleeDespawnAt;
+    }
+
+    private void DespawnAfterFleeTimeout()
+    {
+        LogDebug($"Despawning after fleeing for {fleeDespawnTimeLimit:0.##} seconds.");
+        StopActivationRoutine();
+        currentTarget = null;
+        ClearFleeDespawnTimer();
+        tauntUntil = 0f;
+        nextTauntTime = 0f;
+        State = RunawayState.Despawning;
+
+        StopAgent();
+        RestoreRigidbodySettings();
+        OnRunawayDespawned?.Invoke(this);
+        Destroy(gameObject);
     }
 }
