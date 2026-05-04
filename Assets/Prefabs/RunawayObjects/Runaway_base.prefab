@@ -358,17 +358,17 @@ MonoBehaviour:
   swayFrequency: 2
   activationDelay: 0.75
   cooldownAfterCaught: 10
-  soundCooldown: 10
+  soundCooldown: 30
   tauntInterval: 10
   tauntDuration: 3
   tauntMotionScale: 0.6
   despawnAfterFleeTime: 0
   fleeDespawnTimeLimit: 15
   autoActivateAfterReset: 1
-  autoActivationMinDelay: 5
-  autoActivationMaxDelay: 10
-  debugLogging: 1
-  debugAction: {fileID: -6131295136447488360, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+  autoActivationMinDelay: 10
+  autoActivationMaxDelay: 30
+  debugLogging: 0
+  debugAction: {fileID: 0}
 --- !u!195 &107792027
 NavMeshAgent:
   m_ObjectHideFlags: 0
