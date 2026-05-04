@@ -111,6 +111,18 @@ public partial class RunawayObject : MonoBehaviour
     [Range(0.05f, 1f)]
     private float destinationTauntMotionScale = 0.6f;
 
+    [Header("Auto Activation")]
+    [SerializeField]
+    private bool autoActivateAfterReset = true;
+
+    [SerializeField]
+    [Min(0f)]
+    private float autoActivationMinDelay = 30f;
+
+    [SerializeField]
+    [Min(0f)]
+    private float autoActivationMaxDelay = 120f;
+
     [Header("Debug")]
     [SerializeField]
     private bool debugLogging = false;
@@ -147,6 +159,7 @@ public partial class RunawayObject : MonoBehaviour
     private Vector3 lastAgentPosition;
     private Vector3 lastMovementDirection = Vector3.forward;
     private Coroutine activationCoroutine;
+    private Coroutine autoActivationCoroutine;
     private Coroutine runStartParticlesCoroutine;
     private Transform runStartParticlesOriginalParent;
     private Vector3 runStartParticlesOriginalLocalPosition;
@@ -196,6 +209,9 @@ public partial class RunawayObject : MonoBehaviour
     private void OnValidate()
     {
         ResolvePrefabReferences();
+
+        if (autoActivationMaxDelay < autoActivationMinDelay)
+            autoActivationMaxDelay = autoActivationMinDelay;
     }
 
     private void ResolvePrefabReferences()
@@ -231,6 +247,7 @@ public partial class RunawayObject : MonoBehaviour
         grabInteractable.selectEntered.RemoveListener(OnGrabbed);
         grabInteractable.selectExited.RemoveListener(OnReleased);
         StopActivationRoutine();
+        StopAutoActivationTimer();
         StopRunStartParticlesRoutine();
         StopAgent();
 
@@ -283,6 +300,7 @@ public partial class RunawayObject : MonoBehaviour
         if (grabInteractable.isSelected)
             return;
 
+        StopAutoActivationTimer();
         activationCoroutine = StartCoroutine(ActivateRoutine());
     }
 
@@ -322,5 +340,43 @@ public partial class RunawayObject : MonoBehaviour
         rb.rotation = originalRotation;
         rb.linearVelocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
+
+        StartAutoActivationTimer();
+    }
+
+    private void StartAutoActivationTimer()
+    {
+        StopAutoActivationTimer();
+
+        if (!autoActivateAfterReset)
+            return;
+
+        float minDelay = Mathf.Max(0f, autoActivationMinDelay);
+        float maxDelay = Mathf.Max(minDelay, autoActivationMaxDelay);
+        float delay = UnityEngine.Random.Range(minDelay, maxDelay);
+        autoActivationCoroutine = StartCoroutine(AutoActivateAfterDelay(delay));
+        LogDebug($"Scheduled auto activation in {delay:0.##} seconds.");
+    }
+
+    private void StopAutoActivationTimer()
+    {
+        if (autoActivationCoroutine == null)
+            return;
+
+        StopCoroutine(autoActivationCoroutine);
+        autoActivationCoroutine = null;
+    }
+
+    private IEnumerator AutoActivateAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        while (State == RunawayState.Idle && (grabInteractable.isSelected || IsOnCooldown))
+            yield return null;
+
+        autoActivationCoroutine = null;
+
+        if (State == RunawayState.Idle)
+            ActivateRunaway();
     }
 }
