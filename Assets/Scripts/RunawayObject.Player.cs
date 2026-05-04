@@ -1,4 +1,5 @@
 using UnityEngine;
+using Unity.XR.CoreUtils;
 
 public partial class RunawayObject
 {
@@ -24,17 +25,23 @@ public partial class RunawayObject
         if (playerPositionReference != null)
             return playerPositionReference;
 
-        if (preferPlayerCameraForDistance && player != null)
+        XROrigin xrOrigin = FindFirstObjectByType<XROrigin>();
+        if (xrOrigin != null)
         {
-            Camera playerCamera = player.GetComponentInChildren<Camera>();
-            if (playerCamera != null)
+            if (preferPlayerCameraForDistance && xrOrigin.Camera != null)
             {
-                playerPositionReference = playerCamera.transform;
+                playerPositionReference = xrOrigin.Camera.transform;
                 LogDebug(
-                    $"Using child camera '{playerPositionReference.name}' under player '{player.name}' for flee distance checks."
+                    $"Using XR Origin camera '{playerPositionReference.name}' under '{xrOrigin.name}' for flee distance checks."
                 );
                 return playerPositionReference;
             }
+
+            playerPositionReference = xrOrigin.transform;
+            LogDebug(
+                $"Using XR Origin transform '{playerPositionReference.name}' for flee distance checks."
+            );
+            return playerPositionReference;
         }
 
         if (preferPlayerCameraForDistance && Camera.main != null)
@@ -44,14 +51,6 @@ public partial class RunawayObject
                 $"Using Camera.main '{playerPositionReference.name}' for flee distance checks."
             );
             return playerPositionReference;
-        }
-
-        if (player != null)
-        {
-            playerPositionReference = player;
-            LogDebug(
-                $"Using assigned player transform '{playerPositionReference.name}' for flee distance checks."
-            );
         }
 
         return playerPositionReference;

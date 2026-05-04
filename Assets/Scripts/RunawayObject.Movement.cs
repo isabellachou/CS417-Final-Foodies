@@ -99,7 +99,7 @@ public partial class RunawayObject
     {
         StopAgent();
         tauntUntil = 0f;
-        tauntPlayedForCurrentDestination = false;
+        nextTauntTime = 0f;
         rb.position = originalPosition;
         rb.rotation = originalRotation;
         RestoreRigidbodySettings();
@@ -162,7 +162,7 @@ public partial class RunawayObject
         if (!agent.enabled)
         {
             tauntUntil = 0f;
-            tauntPlayedForCurrentDestination = false;
+            nextTauntTime = 0f;
             return;
         }
 
@@ -174,6 +174,6 @@ public partial class RunawayObject
 
         agent.enabled = false;
         tauntUntil = 0f;
-        tauntPlayedForCurrentDestination = false;
+        nextTauntTime = 0f;
     }
 }

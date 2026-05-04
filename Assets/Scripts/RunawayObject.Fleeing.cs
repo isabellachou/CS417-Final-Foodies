@@ -44,6 +44,7 @@ public partial class RunawayObject
         }
 
         PlayRunStartEffects();
+        ScheduleNextTaunt();
         State = RunawayState.Fleeing;
         LogDebug("Entered Fleeing state.");
     }
@@ -70,20 +71,16 @@ public partial class RunawayObject
         if (IsTaunting())
         {
             agent.isStopped = true;
-            ApplyAgentMovementVisualOffset(destinationTauntMotionScale, true);
+            ApplyAgentMovementVisualOffset(tauntMotionScale, true);
             return;
         }
 
         agent.isStopped = false;
 
-        if (
-            HasReachedDestination()
-            && !tauntPlayedForCurrentDestination
-            && destinationTauntDuration > 0f
-        )
+        if (ShouldBeginTaunt())
         {
-            BeginDestinationTaunt();
-            ApplyAgentMovementVisualOffset(destinationTauntMotionScale, true);
+            BeginTaunt();
+            ApplyAgentMovementVisualOffset(tauntMotionScale, true);
             return;
         }
 
@@ -103,7 +100,7 @@ public partial class RunawayObject
         currentTarget = null;
         cooldownUntil = Time.time + cooldownAfterCaught;
         tauntUntil = 0f;
-        tauntPlayedForCurrentDestination = false;
+        nextTauntTime = 0f;
 
         OnRunawayEscaped?.Invoke(this);
 
@@ -188,7 +185,6 @@ public partial class RunawayObject
         }
 
         currentTarget = target;
-        tauntPlayedForCurrentDestination = false;
         nextFleeRepathTime = Time.time + fleeRepathInterval;
         nextReactiveRepathTime = Time.time + reactiveRepathInterval;
         playerDistanceAtLastDestination = GetHorizontalPlayerDistance(agent.nextPosition);
@@ -220,14 +216,18 @@ public partial class RunawayObject
         float bestScore = float.NegativeInfinity;
         NavMeshPath path = new NavMeshPath();
 
-        float angleOffset = UnityEngine.Random.Range(0f, 360f);
         int sampleCount = Mathf.Max(1, fleeDestinationSampleCount);
+        float angleOffset = UnityEngine.Random.Range(
+            -90f / Mathf.Max(1, sampleCount),
+            90f / Mathf.Max(1, sampleCount)
+        );
 
         for (int i = 0; i < sampleCount; i++)
         {
-            float angle = angleOffset + (360f * i / sampleCount);
-            Vector3 direction = Quaternion.Euler(0f, angle, 0f) * Vector3.forward;
-            Vector3 candidate = playerPosition + direction * fleeDestinationDistance;
+            float t = sampleCount == 1 ? 0.5f : i / (sampleCount - 1f);
+            float angle = Mathf.Lerp(-90f, 90f, t) + angleOffset;
+            Vector3 direction = Quaternion.Euler(0f, angle, 0f) * awayDirection;
+            Vector3 candidate = origin + direction * fleeDestinationDistance;
 
             if (
                 TryScoreDestination(
@@ -246,7 +246,7 @@ public partial class RunawayObject
                 destination = sampledPosition;
                 target = null;
                 LogDebug(
-                    $"New best sampled destination at {FormatVector(sampledPosition)} score={score:0.##} angle={angle:0.#}."
+                    $"New best sampled destination at {FormatVector(sampledPosition)} score={score:0.##} angleFromAway={angle:0.#}."
                 );
             }
         }
@@ -305,11 +305,38 @@ public partial class RunawayObject
 
         Vector3 moveDirection = hit.position - origin;
         moveDirection.y = 0f;
+        float moveDistance = moveDirection.magnitude;
 
-        if (moveDirection.magnitude <= targetReachDistance)
+        if (moveDistance <= targetReachDistance)
         {
             LogDebug(
-                $"Rejected candidate {FormatVector(hit.position)}: too close to current position, distance={moveDirection.magnitude:0.##}."
+                $"Rejected candidate {FormatVector(hit.position)}: too close to current position, distance={moveDistance:0.##}."
+            );
+            return false;
+        }
+
+        float directMoveAlignment = Vector3.Dot(moveDirection / moveDistance, awayDirection);
+        if (directMoveAlignment <= 0f)
+        {
+            LogDebug(
+                $"Rejected candidate {FormatVector(hit.position)}: destination is not away from player, alignment={directMoveAlignment:0.##}."
+            );
+            return false;
+        }
+
+        if (!TryGetInitialPathDirection(path, origin, out Vector3 initialPathDirection))
+        {
+            LogDebug(
+                $"Rejected candidate {FormatVector(hit.position)}: path has no usable initial movement direction."
+            );
+            return false;
+        }
+
+        float initialPathAlignment = Vector3.Dot(initialPathDirection, awayDirection);
+        if (initialPathAlignment <= 0f)
+        {
+            LogDebug(
+                $"Rejected candidate {FormatVector(hit.position)}: path starts toward the player, alignment={initialPathAlignment:0.##}."
             );
             return false;
         }
@@ -317,6 +344,8 @@ public partial class RunawayObject
         Vector3 playerOffset = hit.position - playerPosition;
         playerOffset.y = 0f;
         float playerDistance = playerOffset.magnitude;
+        float currentPlayerDistance = GetHorizontalDistance(origin, playerPosition);
+        float playerDistanceGain = playerDistance - currentPlayerDistance;
 
         if (playerDistance <= targetReachDistance)
         {
@@ -326,11 +355,25 @@ public partial class RunawayObject
             return false;
         }
 
-        float distanceError = Mathf.Abs(playerDistance - fleeDestinationDistance);
+        if (playerDistanceGain <= 0f)
+        {
+            LogDebug(
+                $"Rejected candidate {FormatVector(hit.position)}: not farther from player, distanceGain={playerDistanceGain:0.##}."
+            );
+            return false;
+        }
+
+        float distanceGainError = Mathf.Abs(playerDistanceGain - fleeDestinationDistance);
         float awayAlignment = Vector3.Dot(playerOffset.normalized, awayDirection);
         float pathLength = GetPathLength(path);
 
-        score = -distanceError + awayAlignment * 0.5f + pathLength * 0.1f;
+        score =
+            awayAlignment * 4f
+            + directMoveAlignment * 4f
+            + initialPathAlignment * 3f
+            + playerDistanceGain * 2f
+            - distanceGainError * 0.5f
+            - pathLength * 0.05f;
         sampledPosition = hit.position;
         return true;
     }
@@ -391,6 +434,39 @@ public partial class RunawayObject
         return total;
     }
 
+    private static float GetHorizontalDistance(Vector3 a, Vector3 b)
+    {
+        Vector3 offset = a - b;
+        offset.y = 0f;
+        return offset.magnitude;
+    }
+
+    private bool TryGetInitialPathDirection(
+        NavMeshPath path,
+        Vector3 origin,
+        out Vector3 initialPathDirection
+    )
+    {
+        initialPathDirection = default;
+
+        if (path == null || path.corners == null)
+            return false;
+
+        for (int i = 0; i < path.corners.Length; i++)
+        {
+            Vector3 direction = path.corners[i] - origin;
+            direction.y = 0f;
+
+            if (direction.sqrMagnitude <= Mathf.Epsilon)
+                continue;
+
+            initialPathDirection = direction.normalized;
+            return true;
+        }
+
+        return false;
+    }
+
     private bool HasPlayerMovedCloser()
     {
         Transform playerReference = ResolvePlayerPositionReference();
@@ -418,7 +494,7 @@ public partial class RunawayObject
         currentTarget = null;
         cooldownUntil = 0f;
         tauntUntil = 0f;
-        tauntPlayedForCurrentDestination = false;
+        nextTauntTime = 0f;
         State = RunawayState.Idle;
 
         if (agent.enabled)

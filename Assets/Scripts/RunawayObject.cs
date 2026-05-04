@@ -23,9 +23,6 @@ public partial class RunawayObject : MonoBehaviour
 
     [Header("References")]
     [SerializeField]
-    private Transform player;
-
-    [SerializeField]
     private bool preferPlayerCameraForDistance = true;
 
     [SerializeField]
@@ -105,11 +102,15 @@ public partial class RunawayObject : MonoBehaviour
     private float soundCooldown = 10f;
 
     [SerializeField]
-    private float destinationTauntDuration = 3f;
+    [Min(0f)]
+    private float tauntInterval = 10f;
+
+    [SerializeField]
+    private float tauntDuration = 3f;
 
     [SerializeField]
     [Range(0.05f, 1f)]
-    private float destinationTauntMotionScale = 0.6f;
+    private float tauntMotionScale = 0.6f;
 
     [Header("Auto Activation")]
     [SerializeField]
@@ -153,7 +154,7 @@ public partial class RunawayObject : MonoBehaviour
     private float nextFleeRepathTime;
     private float nextReactiveRepathTime;
     private float tauntUntil;
-    private bool tauntPlayedForCurrentDestination;
+    private float nextTauntTime;
     private float playerDistanceAtLastDestination = float.PositiveInfinity;
     private float groundClearance;
     private Vector3 lastAgentPosition;
@@ -212,6 +213,9 @@ public partial class RunawayObject : MonoBehaviour
 
         if (autoActivationMaxDelay < autoActivationMinDelay)
             autoActivationMaxDelay = autoActivationMinDelay;
+
+        if (tauntInterval < 0f)
+            tauntInterval = 0f;
     }
 
     private void ResolvePrefabReferences()
@@ -315,7 +319,7 @@ public partial class RunawayObject : MonoBehaviour
         currentTarget = null;
         cooldownUntil = Time.time + cooldownAfterCaught;
         tauntUntil = 0f;
-        tauntPlayedForCurrentDestination = false;
+        nextTauntTime = 0f;
 
         StopAgent();
         RestoreRigidbodySettings();
@@ -332,7 +336,7 @@ public partial class RunawayObject : MonoBehaviour
         State = RunawayState.Idle;
         nextSoundAllowedTime = 0f;
         tauntUntil = 0f;
-        tauntPlayedForCurrentDestination = false;
+        nextTauntTime = 0f;
 
         StopAgent();
         RestoreRigidbodySettings();

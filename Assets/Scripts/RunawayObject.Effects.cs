@@ -3,23 +3,33 @@ using UnityEngine;
 
 public partial class RunawayObject
 {
-    private void BeginDestinationTaunt()
+    private void BeginTaunt()
     {
-        if (destinationTauntDuration <= 0f)
+        if (tauntDuration <= 0f)
             return;
 
-        tauntPlayedForCurrentDestination = true;
-        tauntUntil = Time.time + destinationTauntDuration;
+        tauntUntil = Time.time + tauntDuration;
+        nextTauntTime = Time.time + tauntInterval;
         agent.isStopped = true;
         PlayTauntStartSound();
         LogDebug(
-            $"Entering destination taunt for {destinationTauntDuration:0.##}s at {FormatVector(agent.nextPosition)}."
+            $"Entering taunt for {tauntDuration:0.##}s at {FormatVector(agent.nextPosition)}. nextTauntIn={tauntInterval:0.##}s."
         );
     }
 
     private bool IsTaunting()
     {
         return Time.time < tauntUntil;
+    }
+
+    private bool ShouldBeginTaunt()
+    {
+        return tauntDuration > 0f && tauntInterval > 0f && Time.time >= nextTauntTime;
+    }
+
+    private void ScheduleNextTaunt()
+    {
+        nextTauntTime = tauntInterval > 0f ? Time.time + tauntInterval : 0f;
     }
 
     private void PlayRunStartEffects()
