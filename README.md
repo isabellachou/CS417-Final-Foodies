@@ -30,3 +30,6 @@ Egg crack: https://pixabay.com/sound-effects/film-special-effects-egg-crack5-104
 Sparkle: https://pixabay.com/sound-effects/film-special-effects-sound-effect-twinklesparkle-115095/ <br/>
 Giggle: https://freesound.org/people/Reitanna/sounds/343984/ <br/>
 Giggle 2: https://freesound.org/people/Reitanna/sounds/343991/ <br/>
+
+Images <br/>
+Start screen logo (Sylvanian Family "Basil the Mouse Chef"): https://www.ebay.com/itm/236014464976 <br/>
